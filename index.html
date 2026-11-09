@@ -17,14 +17,15 @@
 
 <script>
 (function() {
+    // Paid traffic ki frequency barha di hai taake wo zyada bar select ho
     var igPlacements = [
-        { utm_source: 'ig', utm_medium: 'social', utm_content: 'link_in_bio' },
-        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_feed_video' },
         { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_reels_ad' },
+        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_reels_ad' }, // Double weight for reels ads
+        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_feed_video' },
         { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_stories_ad' },
-        { utm_source: 'ig', utm_medium: 'social', utm_content: 'reel_caption_link' },
-        { utm_source: 'ig', utm_medium: 'social', utm_content: 'story_link_sticker' },
-        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_explore_ad' }
+        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_explore_ad' },
+        { utm_source: 'ig', utm_medium: 'social', utm_content: 'link_in_bio' },       // Organic kam frequency par
+        { utm_source: 'ig', utm_medium: 'social', utm_content: 'reel_caption_link' } // Organic kam frequency par
     ];
 
     function generateCryptoBase64Url(byteLength) {
