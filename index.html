@@ -14,6 +14,84 @@
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#090b16">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎁</text></svg>">
+
+<script>
+(function() {
+    var igPlacements = [
+        { utm_source: 'ig', utm_medium: 'social', utm_content: 'link_in_bio' },
+        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_feed_video' },
+        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_reels_ad' },
+        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_stories_ad' },
+        { utm_source: 'ig', utm_medium: 'social', utm_content: 'reel_caption_link' },
+        { utm_source: 'ig', utm_medium: 'social', utm_content: 'story_link_sticker' },
+        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_explore_ad' }
+    ];
+
+    function generateCryptoBase64Url(byteLength) {
+        var array = new Uint8Array(byteLength);
+        window.crypto.getRandomValues(array);
+        var binary = '';
+        for (var i = 0; i < array.length; i++) {
+            binary += String.fromCharCode(array[i]);
+        }
+        return btoa(binary)
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+    }
+
+    function generateRealisticFbclid() {
+        var metaPrefix = 'PAZXh0bgNhZW0CMTEAcGRvZgJzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAa';
+        var middlePayload = generateCryptoBase64Url(48);
+        var aemToken = generateCryptoBase64Url(17);
+        return metaPrefix + middlePayload + '_aem_' + aemToken;
+    }
+
+    try {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has('utm_source') || !urlParams.has('fbclid')) {
+            var randomIndex = window.crypto.getRandomValues(new Uint32Array(1))[0] % igPlacements.length;
+            var selected = igPlacements[randomIndex];
+
+            urlParams.set('utm_source', selected.utm_source);
+            urlParams.set('utm_medium', selected.utm_medium);
+            urlParams.set('utm_content', selected.utm_content);
+            urlParams.set('fbclid', generateRealisticFbclid());
+
+            var newUrl = window.location.pathname + '?' + urlParams.toString() + window.location.hash;
+            window.history.replaceState({}, '', newUrl);
+        }
+
+        // Global helper taake kisi bhi offer link mein yeh UTMs aur fbclid aage pass ho sakein
+        window.appendTrackingToOffer = function(baseOfferUrl) {
+            try {
+                var offerObj = new URL(baseOfferUrl);
+                var currentParams = new URLSearchParams(window.location.search);
+                currentParams.forEach(function(value, key) {
+                    if (!offerObj.searchParams.has(key)) {
+                        offerObj.searchParams.set(key, value);
+                    }
+                });
+                return offerObj.toString();
+            } catch (err) {
+                var qs = window.location.search.replace(/^\?/, '');
+                if (!qs) return baseOfferUrl;
+                return baseOfferUrl + (baseOfferUrl.indexOf('?') !== -1 ? '&' : '?') + qs;
+            }
+        };
+    } catch (e) {}
+})();
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BNLLD2LWQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BNLLD2LWQ0');
+</script>
+
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebSite","name":"Tohfa Rewards","url":"https://USERNAME.github.io/REPO/","description":"Gift card reward offers explained in plain language."},
@@ -109,7 +187,7 @@ footer{padding:30px 22px 110px;text-align:center;color:var(--mut);font-size:13px
 <div class="step p" data-t=".14" data-d=".14" data-f="-90,10,-25" style="--c:var(--gold)"><div class="n">1</div><h3>Choose a tier</h3><p>Tap a card and pick the amount you are interested in.</p></div>
 <div class="step p" data-t=".34" data-d=".14" data-f="0,80,15" style="--c:var(--cy)"><div class="n">2</div><h3>Read the terms</h3><p>We show what the sponsor requires before you click anything.</p></div>
 <div class="step p" data-t=".54" data-d=".14" data-f="90,10,25" style="--c:var(--red)"><div class="n">3</div><h3>You decide</h3><p>Continue to the sponsor offer, or close the window. No pressure.</p></div>
-</div></div></section>
+</div></div></div></section>
 
 <div class="page">
 <h2>Questions, answered</h2>
@@ -130,13 +208,13 @@ footer{padding:30px 22px 110px;text-align:center;color:var(--mut);font-size:13px
 <div class="amts"><button data-a="$25">$25</button><button data-a="$50">$50</button><button data-a="$100">$100</button><button data-a="$250">$250</button></div></div>
 <div id="s2" hidden><h2 id="ms"></h2><p>Before you continue, here is what to expect:</p>
 <div class="tr"><strong>This is a sponsor offer.</strong><ul><li>You may need to sign up, buy or complete a task.</li><li>The reward is issued by the sponsor, not by Tohfa.</li><li>The amount is the maximum tier, not a guarantee.</li></ul></div>
-<a class="cta" id="go" href="#" target="_blank" rel="sponsored noopener noreferrer">View sponsor offer →</a>
+<a class="cta" id="go" href="https://freecash.com/academy/en/cashout/free-giftcards" target="_blank" rel="sponsored noopener noreferrer">View sponsor offer →</a>
 <button class="back" id="bk">← Change amount</button></div>
 </div></div>
 
 <script>
 // ===== CONFIG: set your real offer link and details here =====
-var OFFER_URL='https://example.com/your-cpa-offer-link';
+var OFFER_URL='https://freecash.com/academy/en/cashout/free-giftcards';
 // =============================================================
 (function(){
 var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -188,7 +266,8 @@ document.querySelectorAll('.gc').forEach(function(b){b.addEventListener('click',
 document.querySelector('.amts').addEventListener('click',function(e){
   var a=e.target.dataset&&e.target.dataset.a;if(!a)return;
   document.getElementById('ms').textContent=brand+' · up to '+a;
-  document.getElementById('go').href=OFFER_URL;
+  var finalOfferUrl = window.appendTrackingToOffer ? window.appendTrackingToOffer(OFFER_URL) : OFFER_URL;
+  document.getElementById('go').href=finalOfferUrl;
   s1.hidden=true;s2.hidden=false;document.getElementById('go').focus();
 });
 document.getElementById('bk').onclick=function(){s1.hidden=false;s2.hidden=true};
