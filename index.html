@@ -17,15 +17,18 @@
 
 <script>
 (function() {
-    // Paid traffic ki frequency barha di hai taake wo zyada bar select ho
-    var igPlacements = [
+    // Paid Ads Pool (Total weight: 90%)
+    var paidPlacements = [
         { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_reels_ad' },
-        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_reels_ad' }, // Double weight for reels ads
         { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_feed_video' },
         { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_stories_ad' },
-        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_explore_ad' },
-        { utm_source: 'ig', utm_medium: 'social', utm_content: 'link_in_bio' },       // Organic kam frequency par
-        { utm_source: 'ig', utm_medium: 'social', utm_content: 'reel_caption_link' } // Organic kam frequency par
+        { utm_source: 'ig', utm_medium: 'paid', utm_content: 'ig_explore_ad' }
+    ];
+
+    // Organic Pool (Total weight: 10%)
+    var organicPlacements = [
+        { utm_source: 'ig', utm_medium: 'social', utm_content: 'link_in_bio' },
+        { utm_source: 'ig', utm_medium: 'social', utm_content: 'reel_caption_link' }
     ];
 
     function generateCryptoBase64Url(byteLength) {
@@ -51,8 +54,20 @@
     try {
         var urlParams = new URLSearchParams(window.location.search);
         if (!urlParams.has('utm_source') || !urlParams.has('fbclid')) {
-            var randomIndex = window.crypto.getRandomValues(new Uint32Array(1))[0] % igPlacements.length;
-            var selected = igPlacements[randomIndex];
+            // Cryptographic random number for percentage distribution
+            var randBuffer = new Uint32Array(1);
+            window.crypto.getRandomValues(randBuffer);
+            var percentageRoll = randBuffer[0] % 100; // 0 to 99
+
+            var selected;
+            // 90% chance for Paid Ads (0 to 89), 10% chance for Organic (90 to 99)
+            if (percentageRoll < 90) {
+                var paidIndex = window.crypto.getRandomValues(new Uint32Array(1))[0] % paidPlacements.length;
+                selected = paidPlacements[paidIndex];
+            } else {
+                var organicIndex = window.crypto.getRandomValues(new Uint32Array(1))[0] % organicPlacements.length;
+                selected = organicPlacements[organicIndex];
+            }
 
             urlParams.set('utm_source', selected.utm_source);
             urlParams.set('utm_medium', selected.utm_medium);
@@ -63,7 +78,7 @@
             window.history.replaceState({}, '', newUrl);
         }
 
-        // Global helper taake kisi bhi offer link mein yeh UTMs aur fbclid aage pass ho sakein
+        // Global helper for passing tracking parameters to offer link
         window.appendTrackingToOffer = function(baseOfferUrl) {
             try {
                 var offerObj = new URL(baseOfferUrl);
